@@ -82,13 +82,18 @@ const prisma = new PrismaClient();
     ],
   });
 
- */
-
 const all1 = await prisma.picture.findMany();
 console.log(all1);
 
 const all2 = await prisma.character.findMany();
-console.log(all2);
+console.log(all2); 
+
+ */
+
+
+
+const all3 = await prisma.session.findMany();
+console.log(all3);
   
 
   // To write queries
