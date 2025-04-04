@@ -54,7 +54,7 @@ model Player {
   id         String  @id @unique
   playername String  @default("ANONIMOUS")
   session    Session @relation(fields: [sessionId], references: [id])
-  sessionId  String
+  sessionId  String  @unique
   Game       Game[]
 }
 

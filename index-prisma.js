@@ -88,12 +88,24 @@ console.log(all1);
 const all2 = await prisma.character.findMany();
 console.log(all2); 
 
- */
-
-
-
 const all3 = await prisma.session.findMany();
 console.log(all3);
+
+ 
+
+const create1 = await prisma.player.create({
+  data: 
+    { 
+      id: 'un-id-para-borrar-luego', 
+      sessionId: 'qRECfqN7xKS9oRTWWKdgxZYIaE3XoCRP', 
+     },
+ 
+}); 
+
+*/
+
+const all4 = await prisma.player.findMany();
+console.log(all4);
   
 
   // To write queries

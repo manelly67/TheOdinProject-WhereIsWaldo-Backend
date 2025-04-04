@@ -5,4 +5,13 @@ async function get(req, res) {
   });
 }
 
-module.exports = { get };
+async function getSessionId(req, res) {
+  const sessionId = req.sessionID;
+  return res.status(200).json({
+    SessionID: `${sessionId}`,
+  });
+}
+
+
+
+module.exports = { get, getSessionId };
