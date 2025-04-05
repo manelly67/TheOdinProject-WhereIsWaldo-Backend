@@ -3,8 +3,8 @@ const playerController  = require("../controllers/player");
 
 const router = Router();
 
-router.get("/new", playerController.getNew);
-router.post("/new", playerController.postNew);
+router.get("/player_for_session", playerController.getPlayer);
+router.post("/player_for_session", playerController.postPlayer);
 
 router.get("/:session_id", playerController.getBySessionId)
 

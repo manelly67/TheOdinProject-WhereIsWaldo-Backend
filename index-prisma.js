@@ -104,6 +104,12 @@ const create1 = await prisma.player.create({
 
 */
 
+const deleteOne = await prisma.player.delete({
+  where: {
+    id: 'un-id-para-borrar-luego',
+  },
+});
+
 const all4 = await prisma.player.findMany();
 console.log(all4);
   
