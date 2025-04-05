@@ -41,6 +41,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/", routes.homepage);
 app.use("/players", routes.player);
+app.use("/games", routes.game);
 
 app.listen(port, host, () => {
     console.log(`Server is running on ${host}:${port}`);

@@ -102,8 +102,6 @@ const create1 = await prisma.player.create({
  
 }); 
 
-*/
-
 const deleteOne = await prisma.player.delete({
   where: {
     id: 'un-id-para-borrar-luego',
@@ -112,9 +110,89 @@ const deleteOne = await prisma.player.delete({
 
 const all4 = await prisma.player.findMany();
 console.log(all4);
-  
 
-  // To write queries
+
+
+
+const targets = [
+  { id: "char-1", name: "Wally", found: false, x: 0, y: 0 },
+  { id: "char-2", name: "R2D2", found: false, x: 0, y: 0 },
+  {
+    id: "char-3",
+    name: "Courage the Cowardly Dog",
+    found: false,
+    x: 0,
+    y: 0,
+  },
+];
+
+await prisma.game.create({
+  data: {
+    id: 'un-id-para-borrar-luego',
+    playerId: 'd969deb2-2ea4-4558-8fb2-eb947ef5297f',
+    pictureId: 'img-1',
+    targets: targets,
+  },
+})
+.then(
+  async () => {
+    await prisma.$disconnect();
+  }
+)
+.catch(async (err) => {
+  if(err){
+    return res.status(400).json({
+      err_code: err.code,
+      err_meta: err.meta,
+    });
+  }else{
+    await prisma.$disconnect();
+    process.exit(1);
+  }
+});
+
+const all5 = await prisma.game.findMany();
+console.log(all5);
+*/
+
+const all3 = await prisma.session.findMany();
+console.log(all3);
+
+const getById = await prisma.game.findUnique({
+    where:{
+      id: 'un-id-para-borrar-luego',
+    },
+    select:{
+      id: true,
+      startedAt: true,
+      finishedAt: true,
+      timeRecord: true,
+      player: {
+        select: {
+          id: true,
+          playername: true,
+          sessionId: true,
+          session: {
+            select: {
+              expiresAt: true,
+            },
+          },
+        },
+      },
+      picture:{
+        select: {
+          id: true,
+          title: true,
+          src_image: true,
+        },
+      },
+      targets: true,
+      status: true,
+    },
+  });
+
+console.log(getById);
+
 
     };
 

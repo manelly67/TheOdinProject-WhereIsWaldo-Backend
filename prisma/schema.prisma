@@ -22,12 +22,19 @@ model Game {
   playerId   String
   picture    Picture   @relation(fields: [pictureId], references: [id])
   pictureId  String
+  targets    Json[]
+  status     Status    @default(GAMING)
+}
+
+enum Status {
+  GAMING
+  ENDED
+  ABORTED
 }
 
 model Character {
   id           String  @id @unique
   name         String
-  found        Boolean @default(false)
   imageAbout   Picture @relation(fields: [imageAboutId], references: [id])
   imageAboutId String
   x            Decimal
