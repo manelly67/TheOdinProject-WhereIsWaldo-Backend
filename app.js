@@ -27,7 +27,7 @@ app.use(
     store: new PrismaSessionStore(
       new PrismaClient(),
       {
-        checkPeriod: 2 * 60 * 1000,  //ms
+        checkPeriod: 2 * 60 * 1000,  //ms Check every 2 minutes
         dbRecordIdIsSessionId: true,
         dbRecordIdFunction: undefined,
       }

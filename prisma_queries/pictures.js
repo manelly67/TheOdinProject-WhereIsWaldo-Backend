@@ -9,4 +9,12 @@ const getCharacters = async (img_id) => {
     });
   };
 
-module.exports = { getCharacters };
+  const getCharDetailsById = async (char_id) => {
+    return await prisma.character.findUnique({
+      where: { 
+        id: char_id,
+      },
+    });
+  };
+
+module.exports = { getCharacters, getCharDetailsById };

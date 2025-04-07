@@ -81,5 +81,40 @@ const createNewGame = async(id,player_id,img_id,targets) => {
     });
   }
 
+  async function updateGameStatus(game,newStatus) {
+    await prisma.game.update({
+      where:{
+        id: game.id,
+      },
+      data: {
+        startedAt: game.startedAt,
+        timeRecord: game.timeRecord,
+        playerId: game.playerId,
+        pictureId: game.pictureId,
+        targets: game.targets,
+        status: newStatus,
+      },
+    })
+    .then(async () => {
+      await prisma.$disconnect();
+    })
+    .catch(async (err) => {
+      if(err){
+        return res.status(400).json({
+          err_code: err.code,
+          err_meta: err.meta,
+        });
+      }else{
+        await prisma.$disconnect();
+        process.exit(1);
+      }
+    });
+  };
+  
 
-  module.exports = { getActiveByImgAndPlayer, getById ,createNewGame };
+  module.exports = {
+    getActiveByImgAndPlayer,
+    getById,
+    createNewGame,
+    updateGameStatus,
+  };

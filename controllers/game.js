@@ -1,10 +1,10 @@
 const { v4: uuidv4 } = require("uuid");
+const { isPast } = require("date-fns");
 const db_players = require("../prisma_queries/players");
 const db_games = require("../prisma_queries/game");
 const db_pictures = require("../prisma_queries/pictures");
+const db_sessions = require("../prisma_queries/session");
 
-// LUEGO BUSCAR UNA OPCION PARA QUE LOS JUEGOS NO FINALIZADOS DE SESIONES EXPIRADAS 
-// PASEN A STATUS ABORTED
 
 async function newGameGet(req, res) {
  // if player has active game - return the active game
@@ -42,9 +42,47 @@ if (game === undefined || game === null) {
         game: activeGameObject,
       });
   }
+}
+
+async function roundResult(req, res) {
+  const { game_id } = req.params;
+  const { player_obj, char_obj, normalize_x, normalize_y } = req.body;
+  // check if the game is active
+  const game = {};
+  const gameActive = await isGameActive(game_id);  // true - false
+  switch(gameActive){
+    case false:
+      return res.status(400).json({
+        round_answer: 'incorrect',
+        message: 'This is not an active game',
+      });
+    
+    case true:
+      // check if the session player is expired
+      const sessionExpired = await isSessionExpired(player_obj);
+      switch(sessionExpired){
+        case true:
+            game = await db_games.getById(game_id); 
+            await db_games.updateGameStatus(game,'ABORTED');
+            return res.status(400).json({
+              round_answer: 'incorrect',
+              message: 'Session expired, game was aborted',
+            });
+        
+        case false:
+            game = await db_games.getById(game_id); 
+        break;
+      }
+    break;
+  }
+// start playing the round - received coords
+const result = await checkCoords(char_obj, normalize_x, normalize_y);
+
 
 }
 
+
+// auxiliary functions
 async function createGameObject(id){
     const data = await db_games.getById(id);
     const obj = {
@@ -79,5 +117,24 @@ async function createArrayTargets(img_id){
     return temp;
 }
 
+async function isSessionExpired(player_obj){
+  const temp = await db_sessions.getFromId(player_obj.sessionId);
+  let result = true;
+  if (temp){
+    result = isPast(new Date(temp.expiresAt));
+  }
+  return result;
+}
 
-module.exports = { newGameGet, newGamePost };
+async function isGameActive(id) {
+  const temp = await db_games.getById(id);
+  let check = temp.status === 'GAMING' ? true : false;
+  return check;
+}
+
+async function checkCoords(char_obj, normalize_x, normalize_y){
+  const charDetails = await db_pictures.getCharDetailsById(char_obj.id);
+  // utilzar lodash in Range
+}
+ 
+module.exports = { newGameGet, newGamePost, roundResult };

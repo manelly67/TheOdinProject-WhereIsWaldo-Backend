@@ -1,4 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
+const { parseJSON } = require("date-fns");
+const { isPast } = require("date-fns");
 
 const prisma = new PrismaClient();
 
@@ -18,7 +20,6 @@ const prisma = new PrismaClient();
       { 
         id: "char-1",
         name: "Wally",
-        found: false,
         imageAboutId: 'img-1',
         x: -0.2084883721,
         y: 0.2356115108,
@@ -34,7 +35,6 @@ const prisma = new PrismaClient();
        { 
         id: "char-2",
         name: "R2D2",
-        found: false,
         imageAboutId: 'img-1',
         x: 0.6262790698,
         y: 0.0113309353,
@@ -50,7 +50,6 @@ const prisma = new PrismaClient();
        { 
         id: "char-3",
         name: "Courage the Cowardly Dog",
-        found: false,
         imageAboutId: 'img-1',
         x: 0.4794883721,
         y: -0.3697841727,
@@ -66,7 +65,6 @@ const prisma = new PrismaClient();
        { 
         id: "char-4",
         name: "Four Leaf Clover",
-        found: false,
         imageAboutId: 'img-2',
         x: -0.4963826607,
         y: 0.6964285714,
@@ -151,13 +149,6 @@ await prisma.game.create({
   }
 });
 
-const all5 = await prisma.game.findMany();
-console.log(all5);
-*/
-
-const all3 = await prisma.session.findMany();
-console.log(all3);
-
 const getById = await prisma.game.findUnique({
     where:{
       id: 'un-id-para-borrar-luego',
@@ -191,7 +182,33 @@ const getById = await prisma.game.findUnique({
     },
   });
 
-console.log(getById);
+
+
+*/
+
+const dateStr = '2025-04-10T22:47:34.965Z';
+const pastDate = '2025-04-06T22:47:34.965Z';
+/* const datetoStr = dateStr.toDateString(); */
+const datetoStr1 = dateStr.toString();
+
+const result1 = isPast(new Date(dateStr));
+const result2 = isPast(new Date(pastDate));
+
+console.log(dateStr);
+console.log(pastDate);
+
+console.log(result1,result2);
+
+
+const all3 = await prisma.session.findMany();
+console.log(all3);
+
+const all4 = await prisma.player.findMany();
+console.log(all4);
+
+const all5 = await prisma.game.findMany();
+console.log(all5);
+
 
 
     };
