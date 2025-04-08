@@ -1,6 +1,8 @@
 const { PrismaClient } = require('@prisma/client');
-const { parseJSON } = require("date-fns");
+
 const { isPast } = require("date-fns");
+const _ = require('lodash');
+const inRange = require('lodash.inrange');
 
 const prisma = new PrismaClient();
 
@@ -182,24 +184,6 @@ const getById = await prisma.game.findUnique({
     },
   });
 
-
-
-*/
-
-const dateStr = '2025-04-10T22:47:34.965Z';
-const pastDate = '2025-04-06T22:47:34.965Z';
-/* const datetoStr = dateStr.toDateString(); */
-const datetoStr1 = dateStr.toString();
-
-const result1 = isPast(new Date(dateStr));
-const result2 = isPast(new Date(pastDate));
-
-console.log(dateStr);
-console.log(pastDate);
-
-console.log(result1,result2);
-
-
 const all3 = await prisma.session.findMany();
 console.log(all3);
 
@@ -208,6 +192,10 @@ console.log(all4);
 
 const all5 = await prisma.game.findMany();
 console.log(all5);
+
+
+*/
+
 
 
 

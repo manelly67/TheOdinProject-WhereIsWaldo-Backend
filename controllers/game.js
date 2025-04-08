@@ -1,5 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const { isPast } = require("date-fns");
+const _ = require('lodash');
+const inRange = require('lodash.inrange');
 const db_players = require("../prisma_queries/players");
 const db_games = require("../prisma_queries/game");
 const db_pictures = require("../prisma_queries/pictures");
@@ -77,7 +79,22 @@ async function roundResult(req, res) {
   }
 // start playing the round - received coords
 const result = await checkCoords(char_obj, normalize_x, normalize_y);
+switch(result){
+    case false:
+      return res.status(400).json({
+        round_answer: 'incorrect',
+        message: 'wrong coords',
+      });
+    default:
+      const gameUpdated = await updateGameTargets(game,result);
+      // antes de enviar el mensaje de correct and founded actualizar el juego
+      // en el juego actualizar el char en target como founded true y las coordenadas para la etiqueta
+      // luego chequear si queda por encontrar de ser si enviar respuesta
+      // si no quedan por encontrar hacer el cierre del juego obtener score y cambiar status ended
+     // para luego enviar respuesta
 
+    break;
+}
 
 }
 
@@ -132,9 +149,26 @@ async function isGameActive(id) {
   return check;
 }
 
-async function checkCoords(char_obj, normalize_x, normalize_y){
+async function checkCoords(char_obj, normalize_x, normalize_y) {
   const charDetails = await db_pictures.getCharDetailsById(char_obj.id);
-  // utilzar lodash in Range
+  let validationArray = [];
+  validationArray.push(
+    _.inRange(normalize_x, charDetails.leftX, charDetails.rightX)
+  );
+  validationArray.push(
+    _.inRange(normalize_y, charDetails.topY, charDetails.bottomY)
+  );
+  const result = validationArray.includes(false)
+    ? false
+    : { found: true, x: charDetails.x, y: charDetails.y };
+  return result;
 }
  
+async function updateGameTargets(game,result) {
+  
+
+  // retornar el nuevo objeto game
+}
+
+
 module.exports = { newGameGet, newGamePost, roundResult };

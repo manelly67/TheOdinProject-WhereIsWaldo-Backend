@@ -31,6 +31,7 @@
     "express-session": "^1.18.1",
     "express-validator": "^7.2.1",
     "lodash": "^4.17.21",
+    "lodash.inrange": "^3.3.6",
     "uuid": "^11.0.5"
   },
   "devDependencies": {
