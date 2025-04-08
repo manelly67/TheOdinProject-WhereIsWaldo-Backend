@@ -1,8 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const { isPast } = require("date-fns");
 const _ = require('lodash');
-const inRange = require('lodash.inrange');
-const db_players = require("../prisma_queries/players");
+
 const db_games = require("../prisma_queries/game");
 const db_pictures = require("../prisma_queries/pictures");
 const db_sessions = require("../prisma_queries/session");
@@ -50,7 +49,7 @@ async function roundResult(req, res) {
   const { game_id } = req.params;
   const { player_obj, char_obj, normalize_x, normalize_y } = req.body;
   // check if the game is active
-  const game = {};
+  let game = {};
   const gameActive = await isGameActive(game_id);  // true - false
   switch(gameActive){
     case false:
@@ -60,7 +59,7 @@ async function roundResult(req, res) {
       });
     
     case true:
-      // check if the session player is expired
+    {  // check if the session player is expired
       const sessionExpired = await isSessionExpired(player_obj);
       switch(sessionExpired){
         case true:
@@ -75,6 +74,7 @@ async function roundResult(req, res) {
             game = await db_games.getById(game_id); 
         break;
       }
+    }
     break;
   }
 // start playing the round - received coords
@@ -86,13 +86,22 @@ switch(result){
         message: 'wrong coords',
       });
     default:
+{
       const gameUpdated = await updateGameTargets(game,result);
-      // antes de enviar el mensaje de correct and founded actualizar el juego
-      // en el juego actualizar el char en target como founded true y las coordenadas para la etiqueta
-      // luego chequear si queda por encontrar de ser si enviar respuesta
-      // si no quedan por encontrar hacer el cierre del juego obtener score y cambiar status ended
-     // para luego enviar respuesta
+      const stillTobefound = stillCharTobefound(gameUpdated);
+      switch(stillTobefound){
+        case true:
+        // enviar mensaje de correct and founded
+        // enviar el objeto juego actualizado
+        break;
+        case false:
+        // obtener el score
+        // asignar al juego status ended
+        // enviar el mensaje juego finalizado y el score y el resultado
 
+        break;
+      }
+    } 
     break;
 }
 
@@ -165,10 +174,32 @@ async function checkCoords(char_obj, normalize_x, normalize_y) {
 }
  
 async function updateGameTargets(game,result) {
-  
-
-  // retornar el nuevo objeto game
+  const arrayTargets = game.targets;
+  const newArray = updateTargetsArray(arrayTargets,result);
+  await db_games.updateGameTargets(game,newArray);
+  const gameUpdated = await db_games.getById(game.id); 
+  return gameUpdated;
 }
 
+function updateTargetsArray(arrayTargets, resultObject) {
+  arrayTargets.forEach((e) => {
+    if (e.id === resultObject.id) {
+      e.found = resultObject.found;
+      e.x = resultObject.x;
+      e.y = resultObject.y;
+    }
+  });
+  return arrayTargets;
+}
+
+function stillCharTobefound(game){
+  const array = game.targets;
+  let foundedArray = [];
+  array.forEach((e)=>{
+    foundedArray.push(e.found);
+  });
+  let result = foundedArray.includes(false) ? true : false;
+  return result;
+}
 
 module.exports = { newGameGet, newGamePost, roundResult };
