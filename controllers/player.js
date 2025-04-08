@@ -4,7 +4,7 @@ const db_players = require("../prisma_queries/players");
 async function getPlayer(req, res) {
   const sessionId = req.sessionID;
   const player = await db_players.getFromSessionId(sessionId);
-  console.log(player);
+ 
   if (player === undefined || player === null) {
     return res.status(200).json({
       SessionID: `${sessionId}`,
@@ -21,7 +21,7 @@ async function getPlayer(req, res) {
 async function postPlayer(req, res) {
   const sessionId = req.sessionID;
   const player = await db_players.getFromSessionId(sessionId);
-  console.log(player);
+ 
   if (player === undefined || player === null) {
     const id = uuidv4();
     await db_players.createNewPlayer(id,sessionId);
@@ -39,7 +39,7 @@ async function postPlayer(req, res) {
 async function getBySessionId(req, res) {
   let { session_id } = req.params;
   const player = await db_players.getFromSessionId(session_id);
-  console.log(player);
+ 
   if (player === undefined || player === null) {
     return res.status(400).json({
       message: "player does not exist",

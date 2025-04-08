@@ -2,7 +2,6 @@ const { PrismaClient } = require('@prisma/client');
 
 const { isPast } = require("date-fns");
 const _ = require('lodash');
-const inRange = require('lodash.inrange');
 
 const prisma = new PrismaClient();
 
@@ -196,8 +195,8 @@ console.log(all5);
 
 */
 
-
-
+const n = _.inRange(2,1,5);
+console.log(n);
 
     };
 
