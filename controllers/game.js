@@ -118,6 +118,31 @@ async function roundResult(req, res) {
   }
 }
 
+async function getTop5(req,res) {
+  const {img_id} = req.params;
+  const sortAndFilter = await db_games.getSortBySeconds(img_id);
+  const top5 = [];
+  for (let i = 0; i < 5; i++) {
+    top5.push(sortAndFilter[i]);
+  }
+  return res.status(200).json({
+    top5: top5,
+  }); 
+}
+
+async function getTop10(req,res) {
+  const {img_id} = req.params;
+  const sortAndFilter = await db_games.getSortBySeconds(img_id);
+  const top10 = [];
+  for (let i = 0; i < 10; i++) {
+    top10.push(sortAndFilter[i]);
+  }
+  return res.status(200).json({
+    top10: top10,
+  }); 
+}
+
+
 // auxiliary functions
 async function createGameObject(id) {
   const data = await db_games.getById(id);
@@ -233,7 +258,13 @@ function getScore(game) {
     start: new Date(start),
     end: new Date(end),
   });
-  return { start: start, end: end, score: n };
+  const { days, hours, minutes, seconds } = n;
+  let daysS = days === undefined ? 0 : days * 86400;
+  let hoursS = hours === undefined ? 0 : hours * 3600;
+  let minutesS = minutes === undefined ? 0 : minutes * 60;
+  let secondsS = seconds === undefined ? 0 : seconds;
+  let S = daysS + hoursS + minutesS + secondsS;
+  return { start: start, end: end, score: n, seconds: S };
 }
 
-module.exports = { newGameGet, newGamePost, roundResult };
+module.exports = { newGameGet, newGamePost, roundResult, getTop5, getTop10 };

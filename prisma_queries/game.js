@@ -29,6 +29,7 @@ const getById = async(id)=>{
       startedAt: true,
       finishedAt: true,
       timeRecord: true,
+      timeInSeconds: true,
       player: {
         select: {
           id: true,
@@ -50,6 +51,41 @@ const getById = async(id)=>{
       },
       targets: true,
       status: true,
+    },
+  });
+};
+
+const getSortBySeconds = async(image_id)=>{
+  return await prisma.game.findMany({
+    where: {
+      AND: {
+        pictureId: {
+          equals: image_id,
+        },
+        status: {
+          equals: 'ENDED',
+        },
+      },
+    },
+    orderBy: {
+      timeInSeconds: 'asc',
+    },
+    select:{
+      id: true,
+      timeRecord: true,
+      timeInSeconds: true,
+      player: {
+        select: {
+          id: true,
+          playername: true,
+        },
+      },
+      picture:{
+        select: {
+          id: true,
+          title: true,
+        },
+      },
     },
   });
 };
@@ -150,6 +186,7 @@ const createNewGame = async(id,player_id,img_id,targets,req,res) => {
         startedAt: game.startedAt,
         finishedAt: scoreObject.end,
         timeRecord: scoreObject.score,
+        timeInSeconds: Number(scoreObject.seconds),
         playerId: game.playerId,
         pictureId: game.pictureId,
         targets: game.targets,
@@ -181,4 +218,5 @@ const createNewGame = async(id,player_id,img_id,targets,req,res) => {
     updateGameStatus,
     updateGameTargets,
     finishTheGame,
+    getSortBySeconds,
   };

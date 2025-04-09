@@ -218,8 +218,17 @@ const deleteOne = await prisma.game.delete({
   },
 });
 
-*/
-
+{
+    id: 'a866ff4a-d49b-4b8d-be4e-eb78cfa14d71',
+    startedAt: 2025-04-09T16:10:45.335Z,
+    finishedAt: 2025-04-09T16:39:22.930Z,
+    timeRecord: { minutes: 28, seconds: 37 },
+    timeInSeconds: 1717,
+    playerId: '03e37f5c-76ff-4743-8e67-1b51ed9c7d58',
+    pictureId: 'img-1',
+    targets: [ [Object], [Object], [Object] ],
+    status: 'ENDED'
+  }
 
 
 const all5 = await prisma.game.findMany();
@@ -228,6 +237,12 @@ console.log(all5);
 const all4 = await prisma.player.findMany();
 console.log(all4);
 
+
+*/
+
+
+const all5 = await prisma.game.findMany();
+console.log(all5);
 
     };
 
