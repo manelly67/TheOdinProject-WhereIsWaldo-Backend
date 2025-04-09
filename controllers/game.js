@@ -78,6 +78,7 @@ async function roundResult(req, res) {
   }
   // start playing the round - received coords
   const result = await checkCoords(char_obj, normalize_x, normalize_y);
+  console.log(`result is ${result}`);
   switch (result) {
     case false:
       return res.status(400).json({
@@ -88,7 +89,9 @@ async function roundResult(req, res) {
       {
         await updateGameTargets(game, result, req, res);
         game = await db_games.getById(game_id);
+        console.log(game);
         const stillTobefound = stillCharTobefound(game);
+        console.log(`still is ${stillTobefound}`);
         switch (stillTobefound) {
           case true: {
             const gameObject = await createGameObject(game.id);
@@ -145,7 +148,7 @@ async function createArrayTargets(img_id) {
   let temp = [];
   array.forEach((e) => {
     temp.push(
-      `{id: ${e.id}, name: ${e.name}, found: ${defOpt}, x: ${zero}, y: ${zero} }`
+      {"id": e.id, "name":e.name, "found":defOpt, "x":zero, "y":zero }
     );
   });
   console.log(temp);
@@ -163,28 +166,36 @@ async function isSessionExpired(player_obj) {
 
 async function isGameActive(id) {
   const temp = await db_games.getById(id);
-  let check = temp.status === "GAMING" ? true : false;
+  let check = false;
+  if(temp){
+    check = temp.status === "GAMING" ? true : false;
+  }
   return check;
 }
 
 async function checkCoords(char_obj, normalize_x, normalize_y) {
   const charDetails = await db_pictures.getCharDetailsById(char_obj.id);
+  let x = Number(normalize_x);
+  let y = Number(normalize_y);
   let validationArray = [];
-  validationArray.push(
-    _.inRange(normalize_x, charDetails.leftX, charDetails.rightX)
-  );
-  validationArray.push(
-    _.inRange(normalize_y, charDetails.topY, charDetails.bottomY)
-  );
+  validationArray.push(_.inRange(x, charDetails.leftX, charDetails.rightX));
+  validationArray.push(_.inRange(y, charDetails.topY, charDetails.bottomY));
   const result = validationArray.includes(false)
     ? false
-    : { found: true, x: charDetails.x, y: charDetails.y };
+    : {
+        id: charDetails.id,
+        name: charDetails.name,
+        found: true,
+        x: charDetails.x,
+        y: charDetails.y,
+      };
   return result;
 }
 
 async function updateGameTargets(game, result) {
   const arrayTargets = game.targets;
   const newArray = updateTargetsArray(arrayTargets, result);
+  console.log(newArray);
   await db_games.updateGameTargets(game, newArray);
   const gameUpdated = await db_games.getById(game.id);
   return gameUpdated;
@@ -205,8 +216,12 @@ function stillCharTobefound(game) {
   const array = game.targets;
   let foundedArray = [];
   array.forEach((e) => {
-    foundedArray.push(e.found);
+    const received = e.found;
+    const str = received.toString();
+    const bool = str.toLowerCase() === "true";
+    foundedArray.push(bool);
   });
+  console.log(foundedArray);
   let result = foundedArray.includes(false) ? true : false;
   return result;
 }
