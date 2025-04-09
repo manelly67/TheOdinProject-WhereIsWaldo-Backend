@@ -14,7 +14,7 @@ const getFromSessionId = async (sessionId) => {
     });
   };
 
-  const createNewPlayer = async(req,res,id,sessionId) => {
+  const createNewPlayer = async(id,sessionId,req,res) => {
     await prisma.player.create({
       data: {
         id: id,

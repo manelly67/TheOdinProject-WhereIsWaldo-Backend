@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 
 const { isPast } = require("date-fns");
+const { intervalToDuration } = require("date-fns");
 const _ = require('lodash');
 
 const prisma = new PrismaClient();
@@ -192,11 +193,28 @@ console.log(all4);
 const all5 = await prisma.game.findMany();
 console.log(all5);
 
+let start = "";
+let end = new Date();
+const n = intervalToDuration({
+  start: new Date(start),
+  end: new Date(end)
+});
 
 */
+const all5 = await prisma.game.findMany();
+console.log(all5);
 
-const n = _.inRange(2,1,5);
+let start = all5[1].startedAt;
+let end = new Date();
+const n = intervalToDuration({
+  start: new Date(start),
+  end: new Date(end)
+});
+
+console.log(start);
+console.log(end);
 console.log(n);
+
 
     };
 
