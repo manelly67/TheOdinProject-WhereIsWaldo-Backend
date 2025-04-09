@@ -3,6 +3,8 @@ const { PrismaClient } = require('@prisma/client');
 const { isPast } = require("date-fns");
 const { intervalToDuration } = require("date-fns");
 const _ = require('lodash');
+const db_sessions = require("./prisma_queries/session");
+const db_games = require("./prisma_queries/game");
 
 const prisma = new PrismaClient();
 
@@ -200,20 +202,31 @@ const n = intervalToDuration({
   end: new Date(end)
 });
 
+const game = await prisma.game.update(
+  { where:{
+    id:"5c787093-0c92-4722-a634-5d3d10cc73de"
+    },
+    data: {
+      status: "GAMING",
+    },
+  },
+);
+
+const deleteOne = await prisma.game.delete({
+  where: {
+    id: 'ce63c975-ffcf-477e-b1e0-8a7c86351587',
+  },
+});
+
 */
+
+
+
 const all5 = await prisma.game.findMany();
 console.log(all5);
 
-let start = all5[1].startedAt;
-let end = new Date();
-const n = intervalToDuration({
-  start: new Date(start),
-  end: new Date(end)
-});
-
-console.log(start);
-console.log(end);
-console.log(n);
+const all4 = await prisma.player.findMany();
+console.log(all4);
 
 
     };
