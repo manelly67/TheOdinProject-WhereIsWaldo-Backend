@@ -16,7 +16,7 @@ const app = express();
 // Enable All CORS Requests
 app.use(
   cors({
-    origin: "http://localhost:5173/",
+    origin: "http://localhost:5173",
     allowedHeaders: ["Content-Type", "Connection"],
   })
 );
