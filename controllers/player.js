@@ -25,7 +25,7 @@ async function postPlayer(req, res) {
 
   if (player === undefined || player === null) {
     const id = uuidv4();
-    await db_players.createNewPlayer(id, sessionId, req, res);
+    await db_players.createNewPlayer(id, sessionId);
     const newPlayer = await db_players.getFromSessionId(sessionId);
     return res.status(200).json({
       player: newPlayer,

@@ -14,7 +14,7 @@ const getFromSessionId = async (sessionId) => {
     });
   };
 
-  const createNewPlayer = async(id,sessionId,req,res) => {
+  const createNewPlayer = async(id,sessionId) => {
     await prisma.player.create({
       data: {
         id: id,
@@ -28,10 +28,8 @@ const getFromSessionId = async (sessionId) => {
     )
     .catch(async (err) => {
       if(err){
-        return res.status(400).json({
-          err_code: err.code,
-          err_meta: err.meta,
-        });
+        console.log(err);
+        await prisma.$disconnect();
       }else{
         await prisma.$disconnect();
         process.exit(1);

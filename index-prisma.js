@@ -13,7 +13,7 @@ const prisma = new PrismaClient();
  
 /*  const createMany1 = await prisma.picture.createMany({
     data: [
-      { id: 'img-1', title: 'Waldo In The Galactic City', src_image: '"https://res.cloudinary.com/dwlqplcgt/image/upload/v1743608952/find_the_charaters_in_the_galactic_city_pcuwu3.png' },
+      { id: 'img-1', title: 'Waldo In The Galactic City', src_image: 'https://res.cloudinary.com/dwlqplcgt/image/upload/v1743608952/find_the_charaters_in_the_galactic_city_pcuwu3.png' },
       { id: 'img-2', title: 'Oh! Waldo is not here', src_image: 'https://res.cloudinary.com/dwlqplcgt/image/upload/v1743608911/find_the_lucky_clover_mqkdmu.png' },
     ],
   }); 
@@ -237,12 +237,9 @@ console.log(all5);
 const all4 = await prisma.player.findMany();
 console.log(all4);
 
-
 */
 
 
-const all5 = await prisma.game.findMany();
-console.log(all5);
 
     };
 
