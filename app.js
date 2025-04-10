@@ -14,7 +14,12 @@ const secret_key = process.env.SECRET_KEY || myObject.SECRET_KEY;
 
 const app = express();
 // Enable All CORS Requests
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173/",
+    allowedHeaders: ["Content-Type", "Connection"],
+  })
+);
 
 app.use(
   session({
