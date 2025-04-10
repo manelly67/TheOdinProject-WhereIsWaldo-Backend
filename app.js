@@ -39,9 +39,18 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// routes
 app.use("/", routes.homepage);
 app.use("/players", routes.player);
 app.use("/games", routes.game);
+
+app.use((req, res) => {
+  res.status(404).json({
+    message: "Oops, Page Not Found :) ",
+    title: "Error Page",
+  });
+});
+
 
 app.listen(port, host, () => {
     console.log(`Server is running on ${host}:${port}`);

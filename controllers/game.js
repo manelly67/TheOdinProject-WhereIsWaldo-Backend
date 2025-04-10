@@ -10,7 +10,6 @@ const db_sessions = require("../prisma_queries/session");
 async function newGameGet(req, res) {
   // if player has active game - return the active game
   const { img_id, player_id } = req.params;
-  console.log(img_id);
   const [game] = await db_games.getActiveByImgAndPlayer(img_id, player_id);
   if (game === undefined || game === null) {
     return res.status(200).json({
@@ -78,7 +77,6 @@ async function roundResult(req, res) {
   }
   // start playing the round - received coords
   const result = await checkCoords(char_obj, normalize_x, normalize_y);
-  console.log(`result is ${result}`);
   switch (result) {
     case false:
       return res.status(400).json({
@@ -89,9 +87,7 @@ async function roundResult(req, res) {
       {
         await updateGameTargets(game, result, req, res);
         game = await db_games.getById(game_id);
-        console.log(game);
         const stillTobefound = stillCharTobefound(game);
-        console.log(`still is ${stillTobefound}`);
         switch (stillTobefound) {
           case true: {
             const gameObject = await createGameObject(game.id);
@@ -162,7 +158,6 @@ async function createGameObject(id) {
     },
     status: data["status"],
   };
-  console.log(obj);
   return obj;
 }
 
@@ -176,7 +171,6 @@ async function createArrayTargets(img_id) {
       {"id": e.id, "name":e.name, "found":defOpt, "x":zero, "y":zero }
     );
   });
-  console.log(temp);
   return temp;
 }
 
@@ -220,7 +214,6 @@ async function checkCoords(char_obj, normalize_x, normalize_y) {
 async function updateGameTargets(game, result) {
   const arrayTargets = game.targets;
   const newArray = updateTargetsArray(arrayTargets, result);
-  console.log(newArray);
   await db_games.updateGameTargets(game, newArray);
   const gameUpdated = await db_games.getById(game.id);
   return gameUpdated;
@@ -246,7 +239,6 @@ function stillCharTobefound(game) {
     const bool = str.toLowerCase() === "true";
     foundedArray.push(bool);
   });
-  console.log(foundedArray);
   let result = foundedArray.includes(false) ? true : false;
   return result;
 }
