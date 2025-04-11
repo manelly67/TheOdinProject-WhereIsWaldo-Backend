@@ -29,7 +29,6 @@ const getFromSessionId = async (sessionId) => {
     .catch(async (err) => {
       if(err){
         console.log(err);
-        await prisma.$disconnect();
       }else{
         await prisma.$disconnect();
         process.exit(1);
@@ -37,7 +36,7 @@ const getFromSessionId = async (sessionId) => {
     });
   };
 
-  async function updateName(player_id,name,req,res) {
+  async function updateName(player_id,name) {
     await prisma.player.update({
       where:{
         id: player_id,
@@ -51,10 +50,7 @@ const getFromSessionId = async (sessionId) => {
     })
     .catch(async (err) => {
       if(err){
-        return res.status(400).json({
-          err_code: err.code,
-          err_meta: err.meta,
-        });
+        console.log(err);
       }else{
         await prisma.$disconnect();
         process.exit(1);

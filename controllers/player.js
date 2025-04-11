@@ -74,7 +74,7 @@ const updatePlayerName = [
         errors: errors.array(),
       });
     }
-    await db_players.updateName(player_id, name, req, res);
+    await db_players.updateName(player_id, name);
     const updatedPlayer = await db_players.getFromId(player_id);
     return res.status(200).json({
       message: "player name was updated",

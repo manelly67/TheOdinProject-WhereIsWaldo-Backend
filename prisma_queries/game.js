@@ -90,7 +90,7 @@ const getSortBySeconds = async(image_id)=>{
   });
 };
 
-const createNewGame = async(id,player_id,img_id,targets,req,res) => {
+const createNewGame = async(id,player_id,img_id,targets) => {
     await prisma.game.create({
       data: {
         id: id,
@@ -106,10 +106,7 @@ const createNewGame = async(id,player_id,img_id,targets,req,res) => {
     )
     .catch(async (err) => {
       if(err){
-        return res.status(400).json({
-          err_code: err.code,
-          err_meta: err.meta,
-        });
+        console.log(err);
       }else{
         await prisma.$disconnect();
         process.exit(1);
@@ -117,7 +114,7 @@ const createNewGame = async(id,player_id,img_id,targets,req,res) => {
     });
   };
 
-  async function updateGameStatus(game,newStatus,req,res) {
+  async function updateGameStatus(game,newStatus) {
     await prisma.game.update({
       where:{
         id: game.id,
@@ -136,10 +133,7 @@ const createNewGame = async(id,player_id,img_id,targets,req,res) => {
     })
     .catch(async (err) => {
       if(err){
-        return res.status(400).json({
-          err_code: err.code,
-          err_meta: err.meta,
-        });
+        console.log(err);
       }else{
         await prisma.$disconnect();
         process.exit(1);
@@ -147,7 +141,7 @@ const createNewGame = async(id,player_id,img_id,targets,req,res) => {
     });
   };
 
-  async function updateGameTargets(game,newTargets,req,res) {
+  async function updateGameTargets(game,newTargets) {
     await prisma.game.update({
       where:{
         id: game.id,
@@ -166,10 +160,7 @@ const createNewGame = async(id,player_id,img_id,targets,req,res) => {
     })
     .catch(async (err) => {
       if(err){
-        return res.status(400).json({
-          err_code: err.code,
-          err_meta: err.meta,
-        });
+        console.log(err);
       }else{
         await prisma.$disconnect();
         process.exit(1);
@@ -177,7 +168,7 @@ const createNewGame = async(id,player_id,img_id,targets,req,res) => {
     });
   };
 
-  async function finishTheGame(game,scoreObject,newStatus,req,res) {
+  async function finishTheGame(game,scoreObject,newStatus) {
     await prisma.game.update({
       where:{
         id: game.id,
@@ -198,10 +189,7 @@ const createNewGame = async(id,player_id,img_id,targets,req,res) => {
     })
     .catch(async (err) => {
       if(err){
-        return res.status(400).json({
-          err_code: err.code,
-          err_meta: err.meta,
-        });
+        console.log(err);
       }else{
         await prisma.$disconnect();
         process.exit(1);

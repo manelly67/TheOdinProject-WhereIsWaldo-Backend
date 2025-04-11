@@ -30,7 +30,7 @@ async function newGamePost(req, res) {
   if (game === undefined || game === null) {
     const id = uuidv4();
     const targets = await createArrayTargets(img_id);
-    await db_games.createNewGame(id, player_id, img_id, targets, req, res);
+    await db_games.createNewGame(id, player_id, img_id, targets);
     const newGameObject = await createGameObject(id);
     return res.status(200).json({
       game: newGameObject,
@@ -62,7 +62,7 @@ async function roundResult(req, res) {
         switch (sessionExpired) {
           case true:
             game = await db_games.getById(game_id);
-            await db_games.updateGameStatus(game, "ABORTED", req, res);
+            await db_games.updateGameStatus(game, "ABORTED");
             return res.status(400).json({
               round_answer: "incorrect",
               message: "Session expired, game was aborted",
@@ -85,7 +85,7 @@ async function roundResult(req, res) {
       });
     default:
       {
-        await updateGameTargets(game, result, req, res);
+        await updateGameTargets(game, result);
         game = await db_games.getById(game_id);
         const stillTobefound = stillCharTobefound(game);
         switch (stillTobefound) {
@@ -99,7 +99,7 @@ async function roundResult(req, res) {
           }
           case false: {
             const scoreObject = getScore(game);
-            await db_games.finishTheGame(game, scoreObject, "ENDED", req, res);
+            await db_games.finishTheGame(game, scoreObject, "ENDED");
             const gameObject = await createGameObject(game.id);
             return res.status(200).json({
               round_answer: "correct",
