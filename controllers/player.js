@@ -20,7 +20,7 @@ async function getPlayer(req, res) {
 
 // create a player for the session if there is no player yet
 async function postPlayer(req, res) {
-  const sessionId = req.sessionID;
+  const { sessionId } = req.body;
   console.log(sessionId);
   const player = await db_players.getFromSessionId(sessionId);
 
