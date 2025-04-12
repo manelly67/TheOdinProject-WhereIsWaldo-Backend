@@ -10,4 +10,6 @@ router.put("/update/: status", playerController.updatePlayerName);
 
 router.get("/:session_id", playerController.getBySessionId);
 
+router.get("/id/:player_id", playerController.getPlayerById);
+
 module.exports = router;

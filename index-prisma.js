@@ -5,6 +5,7 @@ const { intervalToDuration } = require("date-fns");
 const _ = require('lodash');
 const db_sessions = require("./prisma_queries/session");
 const db_games = require("./prisma_queries/game");
+const db_players = require("./prisma_queries/players");
 
 const prisma = new PrismaClient();
 
@@ -236,9 +237,10 @@ console.log(all5);
 
 const all4 = await prisma.player.findMany();
 console.log(all4);
-
+'5290bdec-150a-4c48-b740-d791ea5e9ad8'
+const playerObj = await db_players.getPlayerById('5290bdec-150a-4c48-b740-d791ea5e9ad8');
+console.log(playerObj);
 */
-
 
 
     };

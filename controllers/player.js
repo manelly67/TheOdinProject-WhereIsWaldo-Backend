@@ -26,8 +26,9 @@ async function postPlayer(req, res) {
   if (player === undefined || player === null) {
     const id = uuidv4();
     await db_players.createNewPlayer(id, sessionId);
-    const newPlayer = await db_players.getFromSessionId(sessionId);
+    const newPlayer = await db_players.getPlayerById(id);
     return res.status(200).json({
+      message: 'new player created',
       player: newPlayer,
     });
   } else {
@@ -48,6 +49,20 @@ async function getBySessionId(req, res) {
   } else {
     return res.status(200).json({
       player,
+    });
+  }
+}
+
+async function getPlayerById(req, res) {
+  const { player_id } = req.params;
+  const playerObj = await db_players.getPlayerById(player_id);
+  if (playerObj === undefined || playerObj === null) {
+    return res.status(400).json({
+      message: "player does not exist",
+    });
+  } else {
+    return res.status(200).json({
+      player: playerObj,
     });
   }
 }
@@ -83,4 +98,4 @@ const updatePlayerName = [
   },
 ];
 
-module.exports = { getPlayer, postPlayer, getBySessionId, updatePlayerName };
+module.exports = { getPlayer, postPlayer, getBySessionId, getPlayerById , updatePlayerName };

@@ -14,6 +14,27 @@ const getFromSessionId = async (sessionId) => {
     });
   };
 
+  const getPlayerById = async (player_id) => {
+    return await prisma.player.findUnique({
+      where: { 
+        id: player_id 
+      },
+      select: {
+        id: true,
+        playername: true,
+        sessionId: true,
+        Game: {
+          select: {
+            id: true,
+            pictureId: true,
+            status: true,
+            timeRecord: true,
+          },
+        },
+      },
+    });
+  };
+
   const createNewPlayer = async(id,sessionId) => {
     await prisma.player.create({
       data: {
@@ -73,6 +94,7 @@ const getFromSessionId = async (sessionId) => {
 
   module.exports = {
    getFromSessionId,
+   getPlayerById,
    createNewPlayer,
    updateName,
    getFromId,
