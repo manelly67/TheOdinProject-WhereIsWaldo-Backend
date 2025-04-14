@@ -58,18 +58,16 @@ async function roundResult(req, res) {
     case true:
       {
         // check if the session player is expired
-        const sessionExpired = await isSessionExpired(player_obj);
+        game = await db_games.getById(game_id);
+        const sessionExpired = await isSessionExpired(game);
         switch (sessionExpired) {
           case true:
-            game = await db_games.getById(game_id);
             await db_games.updateGameStatus(game, "ABORTED");
             return res.status(400).json({
               round_answer: "incorrect",
               message: "Session expired, game was aborted",
             });
-
           case false:
-            game = await db_games.getById(game_id);
             break;
         }
       }
@@ -174,11 +172,13 @@ async function createArrayTargets(img_id) {
   return temp;
 }
 
-async function isSessionExpired(player_obj) {
-  const temp = await db_sessions.getFromId(player_obj.sessionId);
+async function isSessionExpired(game) {
   let result = true;
-  if (temp) {
-    result = isPast(new Date(temp.expiresAt));
+  if(game){
+    let expiresAt = game.player.session.expiresAt;
+    if (expiresAt) {
+      result = isPast(new Date(expiresAt));
+    } 
   }
   return result;
 }
