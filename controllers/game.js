@@ -45,7 +45,7 @@ async function newGamePost(req, res) {
 
 async function roundResult(req, res) {
   const { game_id } = req.params;
-  const { player_obj, char_obj, normalize_x, normalize_y } = req.body;
+  const { char_obj, normalize_x, normalize_y } = req.body;
   // check if the game is active
   let game = {};
   const gameActive = await isGameActive(game_id); // true - false
@@ -77,7 +77,7 @@ async function roundResult(req, res) {
   const result = await checkCoords(char_obj, normalize_x, normalize_y);
   switch (result) {
     case false:
-      return res.status(400).json({
+      return res.status(200).json({
         round_answer: "incorrect",
         message: "wrong coords",
       });
