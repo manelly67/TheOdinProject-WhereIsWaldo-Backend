@@ -42,12 +42,8 @@ model Character {
   x            Decimal
   y            Decimal
   leftX        Decimal
-  leftY        Decimal
-  topX         Decimal
   topY         Decimal
   rightX       Decimal
-  rightY       Decimal
-  bottomX      Decimal
   bottomY      Decimal
 }
 
