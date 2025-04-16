@@ -23,9 +23,9 @@ async function newGameGet(req, res) {
 }
 
 async function newGamePost(req, res) {
-  // create a new game only if player has no active game for the picture
+  // create a new game only if player has no active or ending game for the picture
   const { img_id, player_id } = req.params;
-  const [game] = await db_games.getActiveByImgAndPlayer(img_id, player_id);
+  const [game] = await db_games.getActiveOrEndByImgAndPlayer(img_id, player_id);
   if (game === undefined || game === null) {
     const id = uuidv4();
     const targets = await createArrayTargets(img_id);
