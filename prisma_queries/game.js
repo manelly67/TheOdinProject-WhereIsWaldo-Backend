@@ -19,6 +19,34 @@ const getActiveByImgAndPlayer = async (img_id,player_id) => {
     });
   };
 
+  const getActiveOrEndByImgAndPlayer = async (img_id,player_id) => {
+    return await prisma.game.findMany({
+      where: { 
+        AND:{
+            pictureId:{
+              equals: img_id,
+            },
+            playerId:{
+              equals: player_id,
+            },
+            OR:[
+            {
+              status:{
+                equals: 'GAMING',
+              },
+            },
+            {
+              status:{
+                equals: 'ENDED',
+              },
+            },
+            ],
+        }
+      },
+    });
+  };
+
+
 const getById = async(id)=>{
   return await prisma.game.findUnique({
     where:{
@@ -201,6 +229,7 @@ const createNewGame = async(id,player_id,img_id,targets) => {
 
   module.exports = {
     getActiveByImgAndPlayer,
+    getActiveOrEndByImgAndPlayer,
     getById,
     createNewGame,
     updateGameStatus,

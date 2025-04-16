@@ -5,12 +5,11 @@ const _ = require("lodash");
 
 const db_games = require("../prisma_queries/game");
 const db_pictures = require("../prisma_queries/pictures");
-const db_sessions = require("../prisma_queries/session");
 
 async function newGameGet(req, res) {
-  // if player has active game - return the active game
+  // if player has a game status GAMING or ENDED - return the game 
   const { img_id, player_id } = req.params;
-  const [game] = await db_games.getActiveByImgAndPlayer(img_id, player_id);
+  const [game] = await db_games.getActiveOrEndByImgAndPlayer(img_id, player_id);
   if (game === undefined || game === null) {
     return res.status(200).json({
       player_id: player_id,
