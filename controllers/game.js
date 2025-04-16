@@ -153,6 +153,8 @@ async function createGameObject(id) {
       session_player: data["player"]["sessionId"],
       session_expired: data["player"]["session"]["expiresAt"],
     },
+    timeRecord: data["timeRecord"],
+    timeInSeconds: data["timeInSeconds"],
     status: data["status"],
   };
   return obj;
