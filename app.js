@@ -16,7 +16,7 @@ const app = express();
 // Enable All CORS Requests
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://where_is_the_game.netlify.app",
     allowedHeaders: ["Content-Type", "Connection"],
     credentials:true,
   })
