@@ -62,7 +62,6 @@ The url for the server is https://top-whereis-backend.onrender.com
 The database is hosted in neon.tech
 <br>
 - The image of Waldo hidden in a galactic city is part of the "Where's Waldo?" series of Martin Handford. Courage the Cowardly Dog and R2D2 invited themselves to be part of the drawing.
-<br>
 - The image four leaf clover optical ilusion is part of the article "Only 1% Visually Powerful Can Find The Four Leaf Clover in 5 Seconds" by Roopashree Sharma published in  the web https://www.jagranjosh.com 
 
 
