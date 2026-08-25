@@ -22,6 +22,13 @@ app.use(
   })
 );
 
+const prismaSessionStore = new PrismaSessionStore(new PrismaClient(), {
+  checkPeriod: 2 * 60 * 1000, //ms
+  dbRecordIdIsSessionId: true,
+  dbRecordIdFunction: undefined,
+});
+
+
 app.use(
   session({
     cookie: {
@@ -31,14 +38,7 @@ app.use(
     secret: secret_key,
     resave: true,
     saveUninitialized: true,
-    store: new PrismaSessionStore(
-      new PrismaClient(),
-      {
-        checkPeriod: 2 * 60 * 1000,  //ms Check every 2 minutes
-        dbRecordIdIsSessionId: true,
-        dbRecordIdFunction: undefined,
-      }
-    )
+    store: prismaSessionStore,
   })
 );
 
