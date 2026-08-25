@@ -42,8 +42,6 @@ app.use(
   })
 );
 
-// Call prune() to remove expired sessions
-prismaSessionStore.prune();
 
 //si no se utiliza esta middleware el post object resulta undefined
 app.use(express.json());
