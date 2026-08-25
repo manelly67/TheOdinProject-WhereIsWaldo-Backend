@@ -1,5 +1,5 @@
 // GET /
-import { delSessionsWithoutPlay } from "../prisma_queries/session";
+const delSessionsWithoutPlay = require("../prisma_queries/session");
 
 async function get(req, res) {
   try {
