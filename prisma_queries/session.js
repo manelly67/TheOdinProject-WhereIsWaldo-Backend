@@ -12,7 +12,6 @@ const getFromId = async (sessionId) => {
 const delSessionsWithoutPlay = async () => {
   
   const playerSessionIds = await prisma.player.findMany({
-    where: { sessionId: { not: null } },
     select: { sessionId: true },
     distinct: ["sessionId"],
   });
