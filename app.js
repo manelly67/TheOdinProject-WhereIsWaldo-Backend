@@ -1,7 +1,7 @@
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || "0.0.0.0";
-require('dotenv').config(); 
-console.log(`esta es la base de datos ${process.env.DATABASE_URL}`);
+
+
 const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
