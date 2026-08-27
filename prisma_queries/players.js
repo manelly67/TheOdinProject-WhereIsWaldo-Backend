@@ -2,64 +2,64 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const getFromSessionId = async (sessionId) => {
-    return await prisma.player.findUnique({
-      where: { 
-        sessionId: sessionId 
-      },
-      select: {
-        id: true,
-        playername: true,
-        sessionId: true,
-      },
-    });
-  };
+  return await prisma.player.findUnique({
+    where: {
+      sessionId: sessionId,
+    },
+    select: {
+      id: true,
+      playername: true,
+      sessionId: true,
+    },
+  });
+};
 
-  const getPlayerById = async (player_id) => {
-    return await prisma.player.findUnique({
-      where: { 
-        id: player_id 
-      },
-      select: {
-        id: true,
-        playername: true,
-        sessionId: true,
-        Game: {
-          select: {
-            id: true,
-            pictureId: true,
-            status: true,
-            timeRecord: true,
-          },
+const getPlayerById = async (player_id) => {
+  return await prisma.player.findUnique({
+    where: {
+      id: player_id,
+    },
+    select: {
+      id: true,
+      playername: true,
+      sessionId: true,
+      Game: {
+        select: {
+          id: true,
+          pictureId: true,
+          status: true,
+          timeRecord: true,
         },
       },
-    });
-  };
+    },
+  });
+};
 
-  const createNewPlayer = async(id,sessionId) => {
-    await prisma.player.create({
+const createNewPlayer = async (id, sessionId) => {
+  await prisma.player
+    .create({
       data: {
         id: id,
         sessionId: sessionId,
       },
     })
-    .then(
-      async () => {
-        await prisma.$disconnect();
-      }
-    )
+    .then(async () => {
+      await prisma.$disconnect();
+    })
     .catch(async (err) => {
-      if(err){
+      if (err) {
         console.log(err);
-      }else{
+      } else {
         await prisma.$disconnect();
         process.exit(1);
       }
     });
-  };
+};
 
-  async function updateName(player_id,name) {
-    await prisma.player.update({
-      where:{
+async function updateName(player_id, name) {
+  await prisma.player
+    .update({
+      where: {
         id: player_id,
       },
       data: {
@@ -70,32 +70,33 @@ const getFromSessionId = async (sessionId) => {
       await prisma.$disconnect();
     })
     .catch(async (err) => {
-      if(err){
+      if (err) {
         console.log(err);
-      }else{
+      } else {
         await prisma.$disconnect();
         process.exit(1);
       }
     });
-  };
+}
 
-  async function getFromId(id) {
-    return await prisma.player.findUnique({
-      where: { 
-        id: id 
-      },
-      select: {
-        id: true,
-        playername: true,
-        sessionId: true,
-      },
-    });
-  }
+async function getFromId(id) {
+  return await prisma.player.findUnique({
+    where: {
+      id: id,
+    },
+    select: {
+      id: true,
+      playername: true,
+      sessionId: true,
+    },
+  });
+}
 
-  module.exports = {
-   getFromSessionId,
-   getPlayerById,
-   createNewPlayer,
-   updateName,
-   getFromId,
-  };
+
+module.exports = {
+  getFromSessionId,
+  getPlayerById,
+  createNewPlayer,
+  updateName,
+  getFromId,
+};

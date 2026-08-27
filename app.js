@@ -1,6 +1,36 @@
+const myObject = {};
+require("dotenv").config({ processEnv: myObject });
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || "0.0.0.0";
 
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+// --- función de espera ---
+async function waitForDatabase (retries, delayMs){
+  for (let i = 0; i < retries; i++) {
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      console.log("Conexión a la base de datos lista.");
+      return true;
+    } catch (error) {
+      console.log(`Intento ${i + 1} de ${retries}: base de datos no lista aún, reintentando en ${delayMs / 1000}s...`);
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+  console.error("No se pudo conectar a la base de datos tras varios intentos.");
+  return false;
+};
+
+// --- arranque del servidor ---
+
+const startServer = async () => {
+
+const dbReady = await waitForDatabase(15, 4000); // 15 intentos x 4 segundos = 60 segundos de margen
+
+if (!dbReady) {
+  console.error("Advertencia: la base de datos no respondió, arrancando de todas formas.");
+}
 
 const express = require("express");
 const session = require("express-session");
@@ -9,8 +39,6 @@ const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
 const { PrismaClient } = require('@prisma/client');
 const routes = require("./routes");
 
-const myObject = {};
-require("dotenv").config({ processEnv: myObject });
 const secret_key = process.env.SECRET_KEY || myObject.SECRET_KEY;
 
 const app = express();
@@ -64,3 +92,9 @@ app.use((req, res) => {
 app.listen(port, host, () => {
     console.log(`Server is running on ${host}:${port}`);
   });
+
+}
+
+startServer();
+
+
