@@ -92,6 +92,54 @@ async function getFromId(id) {
   });
 }
 
+async function delAbandonedGames() {
+  const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
+  const threshold = new Date(Date.now() - THREE_DAYS_MS);
+
+  const expiredSessions = await prisma.session.findMany({
+    where: {
+      expiresAt: { lt: threshold },
+    },
+    select: { id: true },
+  });
+
+  const expiredSessionIds = expiredSessions.map((s) => s.id);
+
+  const playersWithoutEndedGames = await prisma.player.findMany({
+    where: {
+      sessionId: { in: expiredSessionIds },
+      Game: {
+        none: { status: "ENDED" },
+      },
+    },
+    select: { id: true },
+  });
+
+  const playerIds = playersWithoutEndedGames.map((p) => p.id);
+
+   if (playerIds.length === 0) {
+    return { gamesDeleted: 0, playersDeleted: 0 };
+  }
+
+  const deletedGames = await prisma.game.deleteMany({
+    where: {
+      playerId: { in: playerIds },
+      status: "GAMING",
+    },
+  });
+
+  const deletedPlayers = await prisma.player.deleteMany({
+    where: { id: { in: playerIds } },
+  });
+
+  return {
+    gamesDeleted: deletedGames.count,
+    playersDeleted: deletedPlayers.count,
+  };
+
+
+  
+}
 
 module.exports = {
   getFromSessionId,
@@ -99,4 +147,5 @@ module.exports = {
   createNewPlayer,
   updateName,
   getFromId,
+  delAbandonedGames,
 };
